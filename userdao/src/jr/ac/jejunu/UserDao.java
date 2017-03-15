@@ -8,7 +8,7 @@ import java.sql.*;
 public class UserDao {
     public User get(Long id) throws SQLException, ClassNotFoundException {
         // User는 mysql에 있음
-        // Class를 로딩해야되겠네
+        // Class를 로딩해야되겠네 -> 컴파일할때 필요하지 않은 클래스라서 로딩함.
         Class.forName("com.mysql.jdbc.Driver");
         // 커넥션을 맺기
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
@@ -30,5 +30,9 @@ public class UserDao {
         connection.close();
         // 결과를 리턴
         return user;
+    }
+
+    public Long add(User user) {
+        return null;
     }
 }
