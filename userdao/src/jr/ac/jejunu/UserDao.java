@@ -5,12 +5,12 @@ import java.sql.*;
 /**
  * Created by Cheechyo on 2017. 3. 15..
  */
-public abstract class UserDao {
+public class UserDao {
 
-    private JejuConnectionMaker connectionMaker;
+    private ConnectionMaker connectionMaker;
 
-    public UserDao(){
-        this.connectionMaker = new JejuConnectionMaker();
+    public UserDao(ConnectionMaker connectionMaker){
+        this.connectionMaker = connectionMaker;
     }
 
     public User get(Long id) throws SQLException, ClassNotFoundException {

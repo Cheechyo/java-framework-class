@@ -16,7 +16,7 @@ public class UserDaoTest {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new JejuConnectionMaker());
         User user = userDao.get(id);
         // id == user.getId()인지 물어보는 함수
         assertThat(id, is(user.getId()));
@@ -30,7 +30,7 @@ public class UserDaoTest {
         String password = "cheesse";
         user.setName(name);
         user.setPassword(password);
-        final UserDao userDao = new UserDao();
+        final UserDao userDao = new UserDao(new JejuConnectionMaker());
         Long id = userDao.add(user);
         User resultUser = userDao.get(id);
         assertThat(id, is(resultUser.getId()));
@@ -42,7 +42,7 @@ public class UserDaoTest {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new HallaConnectionMaker());
         User user = userDao.get(id);
         // id == user.getId()인지 물어보는 함수
         assertThat(id, is(user.getId()));
@@ -56,7 +56,7 @@ public class UserDaoTest {
         String password = "cheesse";
         user.setName(name);
         user.setPassword(password);
-        final UserDao userDao = new UserDao();
+        final UserDao userDao = new UserDao(new HallaConnectionMaker());
         Long id = userDao.add(user);
         User resultUser = userDao.get(id);
         assertThat(id, is(resultUser.getId()));
