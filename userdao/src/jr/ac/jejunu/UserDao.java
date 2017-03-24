@@ -6,8 +6,16 @@ import java.sql.*;
  * Created by Cheechyo on 2017. 3. 15..
  */
 public abstract class UserDao {
+
+    private JejuConnectionMaker connectionMaker;
+
+    public UserDao(){
+        this.connectionMaker = new JejuConnectionMaker();
+    }
+
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.getConnection();
+
         PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
         preparedStatement.execute();
@@ -24,7 +32,7 @@ public abstract class UserDao {
     }
 
     public Long add(User user) throws ClassNotFoundException, SQLException {
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.getConnection();
 
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO userinfo(name,password) values (?, ?)");
         preparedStatement.setString(1, user.getName());
@@ -42,9 +50,4 @@ public abstract class UserDao {
         return id;
     }
 
-    abstract Connection getConnection() throws ClassNotFoundException, SQLException;
-//    {
-//        Class.forName("com.mysql.jdbc.Driver");
-//        return DriverManager.getConnection("jdbc:mysql://localhost/jeju?characterEncoding=utf-8", "jeju", "root");
-//    }
 }
