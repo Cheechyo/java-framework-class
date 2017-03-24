@@ -1,4 +1,4 @@
-package jr.ac.jejunu;
+package kr.ac.jejunu;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

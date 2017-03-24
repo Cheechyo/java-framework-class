@@ -1,4 +1,4 @@
-package jr.ac.jejunu;
+package kr.ac.jejunu;
 
 import java.sql.Connection;
 import java.sql.SQLException;
