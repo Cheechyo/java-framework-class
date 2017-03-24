@@ -1,5 +1,6 @@
 package jr.ac.jejunu;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -11,12 +12,19 @@ import static org.hamcrest.MatcherAssert.*;
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDaoTest {
+    DaoFactory daoFactory;
+    @Before
+    public void setup(){
+        daoFactory = new DaoFactory();
+    }
+
     @Test
     public void get() throws SQLException, ClassNotFoundException {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new UserDao(new JejuConnectionMaker());
+
+        UserDao userDao = daoFactory.getUserDao();
         User user = userDao.get(id);
         // id == user.getId()인지 물어보는 함수
         assertThat(id, is(user.getId()));
@@ -30,33 +38,7 @@ public class UserDaoTest {
         String password = "cheesse";
         user.setName(name);
         user.setPassword(password);
-        final UserDao userDao = new UserDao(new JejuConnectionMaker());
-        Long id = userDao.add(user);
-        User resultUser = userDao.get(id);
-        assertThat(id, is(resultUser.getId()));
-        assertThat(name, is(resultUser.getName()));
-        assertThat(password, is(resultUser.getPassword()));
-    }
-    @Test
-    public void getHalla() throws SQLException, ClassNotFoundException {
-        Long id = 1L;
-        String name = "Won Ji";
-        String password = "Nu Ri";
-        UserDao userDao = new UserDao(new HallaConnectionMaker());
-        User user = userDao.get(id);
-        // id == user.getId()인지 물어보는 함수
-        assertThat(id, is(user.getId()));
-        assertThat(name, is(user.getName()));
-        assertThat(password, is(user.getPassword()));
-    }
-    @Test
-    public void addHalla() throws SQLException, ClassNotFoundException {
-        User user = new User();
-        String name = "Cheechyo";
-        String password = "cheesse";
-        user.setName(name);
-        user.setPassword(password);
-        final UserDao userDao = new UserDao(new HallaConnectionMaker());
+        final UserDao userDao = daoFactory.getUserDao();
         Long id = userDao.add(user);
         User resultUser = userDao.get(id);
         assertThat(id, is(resultUser.getId()));
