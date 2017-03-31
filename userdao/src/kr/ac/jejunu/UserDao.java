@@ -20,11 +20,12 @@ public class UserDao {
             preparedStatement.setLong(1, id);
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();
-            resultSet.next();
-            user = new User();
-            user.setId(resultSet.getLong("ID"));
-            user.setName(resultSet.getString("NAME"));
-            user.setPassword(resultSet.getString("PASSWORD"));
+            if (resultSet.next()){
+                user = new User();
+                user.setId(resultSet.getLong("ID"));
+                user.setName(resultSet.getString("NAME"));
+                user.setPassword(resultSet.getString("PASSWORD"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -97,5 +98,87 @@ public class UserDao {
 
     public void setConnectionMaker(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
+    }
+
+    public long update(User user) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        long id = 0;
+        try {
+            connection = connectionMaker.getConnection();
+
+            preparedStatement = connection.prepareStatement("UPDATE userinfo SET NAME = ?, PASSWORD = ? WHERE ID = ?");
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setLong(3, user.getId());
+            preparedStatement.executeUpdate();
+
+            preparedStatement = connection.prepareStatement("SELECT last_insert_id()");
+            preparedStatement.execute();
+            resultSet = preparedStatement.getResultSet();
+            resultSet.next();
+            id = resultSet.getLong(1);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null)
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (preparedStatement != null)
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (connection != null)
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+        }
+        return id;
+    }
+
+    public void delete(Long id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = connectionMaker.getConnection();
+
+            preparedStatement = connection.prepareStatement("DELETE FROM userinfo where id = ?");
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null)
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (preparedStatement != null)
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (connection != null)
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+        }
     }
 }

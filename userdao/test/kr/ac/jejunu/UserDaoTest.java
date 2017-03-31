@@ -8,6 +8,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import java.sql.SQLException;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -50,5 +51,42 @@ public class UserDaoTest {
         assertThat(id, is(resultUser.getId()));
         assertThat(name, is(resultUser.getName()));
         assertThat(password, is(resultUser.getPassword()));
+    }
+
+    @Test
+    public void update() throws SQLException, ClassNotFoundException {
+        User user = new User();
+        String name = "Cheechyo";
+        String password = "cheesse";
+        user.setName(name);
+        user.setPassword(password);
+
+        Long id = userDao.add(user);
+
+        String changedName = "Cheechyo1";
+        String changedPassword = "cheesse12";
+        user.setId(id);
+        user.setName(changedName);
+        user.setPassword(changedPassword);
+
+        userDao.update(user);
+        User changedUser = userDao.get(id);
+        assertThat(id, is(changedUser.getId()));
+        assertThat(changedName, is(changedUser.getName()));
+        assertThat(changedPassword, is(changedUser.getPassword()));
+    }
+
+    @Test
+    public void delete() throws SQLException, ClassNotFoundException {
+        User user = new User();
+        String name = "wjko";
+        String password = "9211";
+        user.setName(name);
+        user.setPassword(password);
+
+        Long id = userDao.add(user);
+        userDao.delete(id);
+        User deletedUser = userDao.get(id);
+        assertThat(deletedUser, is(nullValue()));
     }
 }
