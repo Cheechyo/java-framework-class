@@ -64,6 +64,7 @@ public class UserDao {
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.executeUpdate();
 
+            // last_insert_id는 connection 기반. 다른 connection이 add한다 해도 그걸 가져오진 않음.
             preparedStatement = connection.prepareStatement("SELECT last_insert_id()");
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();

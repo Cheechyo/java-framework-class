@@ -83,7 +83,7 @@ public class UserDaoTest {
         String password = "9211";
         user.setName(name);
         user.setPassword(password);
-
+        
         Long id = userDao.add(user);
         userDao.delete(id);
         User deletedUser = userDao.get(id);
