@@ -106,7 +106,7 @@ public class UserDao {
         try {
             connection = connectionMaker.getConnection();
             StatementStrategy statementStrategy = new UpdateUserStatementStrategy();
-            preparedStatement = statementStrategy.makeStatement(user.getId(), connection);
+            preparedStatement = statementStrategy.makeStatement(user, connection);
 
             preparedStatement = connection.prepareStatement("SELECT last_insert_id()");
             preparedStatement.execute();
