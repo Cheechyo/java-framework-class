@@ -9,6 +9,10 @@ public class UserDao {
 
     private ConnectionMaker connectionMaker;
 
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
+
     public User get(Long id) throws SQLException, ClassNotFoundException {
         Connection connection = connectionMaker.getConnection();
 
@@ -16,8 +20,8 @@ public class UserDao {
         ResultSet resultSet = null;
         User user = null;
         try {
-            preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new GetUserStatementStrategy();
+            preparedStatement = statementStrategy.makeStatement(id, connection);
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();
             if (resultSet.next()){
@@ -58,10 +62,8 @@ public class UserDao {
         long id = 0;
         try {
             connection = connectionMaker.getConnection();
-
-            preparedStatement = connection.prepareStatement("INSERT INTO userinfo(name,password) values (?, ?)");
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
+            StatementStrategy statementStrategy = new AddUserStatementStrategy();
+            preparedStatement = statementStrategy.makeStatement(user, connection);
             preparedStatement.executeUpdate();
 
             // last_insert_id는 connection 기반. 다른 connection이 add한다 해도 그걸 가져오진 않음.
@@ -70,9 +72,7 @@ public class UserDao {
             resultSet = preparedStatement.getResultSet();
             resultSet.next();
             id = resultSet.getLong(1);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
             if (resultSet != null)
@@ -97,9 +97,6 @@ public class UserDao {
         return id;
     }
 
-    public void setConnectionMaker(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
-    }
 
     public long update(User user) {
         Connection connection = null;
@@ -108,21 +105,15 @@ public class UserDao {
         long id = 0;
         try {
             connection = connectionMaker.getConnection();
-
-            preparedStatement = connection.prepareStatement("UPDATE userinfo SET NAME = ?, PASSWORD = ? WHERE ID = ?");
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setLong(3, user.getId());
-            preparedStatement.executeUpdate();
+            StatementStrategy statementStrategy = new UpdateUserStatementStrategy();
+            preparedStatement = statementStrategy.makeStatement(user.getId(), connection);
 
             preparedStatement = connection.prepareStatement("SELECT last_insert_id()");
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();
             resultSet.next();
             id = resultSet.getLong(1);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
             if (resultSet != null)
@@ -153,21 +144,12 @@ public class UserDao {
         ResultSet resultSet = null;
         try {
             connection = connectionMaker.getConnection();
-
-            preparedStatement = connection.prepareStatement("DELETE FROM userinfo where id = ?");
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new DeleteUserStatementStrategy();
+            preparedStatement = statementStrategy.makeStatement(id, connection);
             preparedStatement.executeUpdate();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            if (resultSet != null)
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             if (preparedStatement != null)
                 try {
                     preparedStatement.close();
@@ -182,4 +164,5 @@ public class UserDao {
                 }
         }
     }
+
 }

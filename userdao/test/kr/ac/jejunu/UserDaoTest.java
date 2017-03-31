@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class UserDaoTest {
 //    DaoFactory daoFactory;
-    UserDao userDao;
+    private UserDao userDao;
     @Before
     public void setup(){
 //        daoFactory = new DaoFactory();
@@ -83,7 +83,7 @@ public class UserDaoTest {
         String password = "9211";
         user.setName(name);
         user.setPassword(password);
-        
+
         Long id = userDao.add(user);
         userDao.delete(id);
         User deletedUser = userDao.get(id);
