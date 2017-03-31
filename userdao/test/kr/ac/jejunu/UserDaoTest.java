@@ -23,6 +23,7 @@ public class UserDaoTest {
 //        userDao = context.getBean(UserDao.class);
         ApplicationContext context = new GenericXmlApplicationContext("daoFactory.xml");
         userDao = context.getBean("userDao", UserDao.class);
+        // userDao = (UserDao) context.getBean("userDao");
     }
 
     @Test

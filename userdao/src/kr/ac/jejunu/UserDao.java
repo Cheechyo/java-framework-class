@@ -9,10 +9,6 @@ public class UserDao {
 
     private ConnectionMaker connectionMaker;
 
-    public UserDao(ConnectionMaker connectionMaker){
-        this.connectionMaker = connectionMaker;
-    }
-
     public User get(Long id) throws SQLException, ClassNotFoundException {
         Connection connection = connectionMaker.getConnection();
 
@@ -50,4 +46,7 @@ public class UserDao {
         return id;
     }
 
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
 }

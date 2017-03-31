@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class DaoFactory {
     @Bean
     public UserDao getUserDao() {
-        return new UserDao(connectionMaker());
+        return new UserDao();
     }
     @Bean
     public ConnectionMaker connectionMaker() {
