@@ -87,6 +87,6 @@ public class UserDaoTest {
         Long id = userDao.add(user);
         userDao.delete(id);
         User deletedUser = userDao.get(id);
-        assertThat(deletedUser, is(nullValue()));
+        assertThat(deletedUser, nullValue());
     }
 }
