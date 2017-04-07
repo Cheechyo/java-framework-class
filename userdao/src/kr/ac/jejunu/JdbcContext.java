@@ -101,7 +101,7 @@ public class JdbcContext {
         try {
             connection = dataSource.getConnection();
             preparedStatement = statementStrategy.makeStatement(connection);
-            //preparedStatement.execute();
+            preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

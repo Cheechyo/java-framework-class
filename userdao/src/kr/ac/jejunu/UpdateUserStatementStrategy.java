@@ -20,7 +20,6 @@ public class UpdateUserStatementStrategy implements StatementStrategy {
         preparedStatement.setString(1, user.getName());
         preparedStatement.setString(2, user.getPassword());
         preparedStatement.setLong(3, user.getId());
-        preparedStatement.executeUpdate();
         return preparedStatement;
     }
 }
