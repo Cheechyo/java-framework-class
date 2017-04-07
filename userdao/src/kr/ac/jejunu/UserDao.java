@@ -1,20 +1,24 @@
 package kr.ac.jejunu;
 
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDao {
 
-    private ConnectionMaker connectionMaker;
-
-    public void setConnectionMaker(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
+    private DataSource dataSource;
+    
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        Connection connection = connectionMaker.getConnection();
+        Connection connection = dataSource.getConnection();
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -61,7 +65,7 @@ public class UserDao {
         ResultSet resultSet = null;
         long id = 0;
         try {
-            connection = connectionMaker.getConnection();
+            connection = dataSource.getConnection();
             StatementStrategy statementStrategy = new AddUserStatementStrategy(user);
             preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.executeUpdate();
@@ -72,7 +76,7 @@ public class UserDao {
             resultSet = preparedStatement.getResultSet();
             resultSet.next();
             id = resultSet.getLong(1);
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             if (resultSet != null)
@@ -103,7 +107,7 @@ public class UserDao {
         ResultSet resultSet = null;
         long id = 0;
         try {
-            connection = connectionMaker.getConnection();
+            connection = dataSource.getConnection();
             StatementStrategy statementStrategy = new UpdateUserStatementStrategy(user);
             preparedStatement = statementStrategy.makeStatement(connection);
 
@@ -112,7 +116,7 @@ public class UserDao {
             resultSet = preparedStatement.getResultSet();
             resultSet.next();
             id = resultSet.getLong(1);
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             if (resultSet != null)
@@ -142,11 +146,11 @@ public class UserDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            connection = connectionMaker.getConnection();
+            connection = dataSource.getConnection();
             StatementStrategy statementStrategy = new DeleteUserStatementStrategy(id);
             preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.executeUpdate();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             if (preparedStatement != null)
