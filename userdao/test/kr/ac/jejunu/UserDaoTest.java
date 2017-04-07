@@ -15,10 +15,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDaoTest {
-//    DaoFactory daoFactory;
     private UserDao userDao;
+
     @Before
-    public void setup(){
+    public void setup() {
 //        daoFactory = new DaoFactory();
 //        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
 //        userDao = context.getBean(UserDao.class);
@@ -39,6 +39,7 @@ public class UserDaoTest {
         assertThat(name, is(user.getName()));
         assertThat(password, is(user.getPassword()));
     }
+
     @Test
     public void add() throws SQLException, ClassNotFoundException {
         User user = new User();
