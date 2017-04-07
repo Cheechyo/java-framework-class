@@ -32,25 +32,13 @@ public class UserDao {
     public void update(User user) {
         String sql = "UPDATE userinfo SET NAME = ?, PASSWORD = ? WHERE ID = ?";
         Object[] params = new Object[] {user.getName(), user.getPassword(), user.getId()};
-        update(sql, params);
-    }
-
-    private void update(String sql, Object[] params) {
-        StatementStrategy statementStrategy = connection -> {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for (int i = 0; i < params.length; i++) {
-                preparedStatement.setObject(i, params[i]);
-            }
-            return preparedStatement;
-        };
-        jdbcContext.jdbcContextForStatementStrategyForUpdate(statementStrategy);
+        jdbcContext.update(sql, params);
     }
 
     public void delete(Long id) {
         String sql = "DELETE FROM userinfo where id = ?";
         Object[] params = new Object[]{id};
-        update(sql, params);
+        jdbcContext.update(sql, params);
     }
 
     public void setJdbcContext(JdbcContext jdbcContext) {

@@ -16,9 +16,10 @@ public class JdbcContext {
         this.dataSource = dataSource;
     }
 
-    private void update(Object[] params) {
+    void update(String sql, Object[] params) {
         StatementStrategy statementStrategy = connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE userinfo SET NAME = ?, PASSWORD = ? WHERE ID = ?");
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (int i = 0; i < params.length; i++) {
                 preparedStatement.setObject(i, params[i]);
             }
