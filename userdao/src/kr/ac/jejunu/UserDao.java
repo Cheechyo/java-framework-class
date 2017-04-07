@@ -1,5 +1,6 @@
 package kr.ac.jejunu;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -17,13 +18,20 @@ public class UserDao {
     public User get(Long id) throws SQLException, ClassNotFoundException {
         final String sql = "select * from userinfo where id = ?";
         Object[] params = new Object[]{id};
-        return jdbcTemplate.queryForObject(sql, params, (resultSet, i) -> {
-            User user = new User();
-            user.setId(resultSet.getLong("id"));
-            user.setName(resultSet.getString("name"));
-            user.setPassword(resultSet.getString("password"));
-            return user;
-        });
+        User user1 = null;
+        try {
+            user1 = jdbcTemplate.queryForObject(sql, params, (resultSet, i) -> {
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setName(resultSet.getString("name"));
+                user.setPassword(resultSet.getString("password"));
+                return user;
+            });
+            return user1;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return user1;
     }
 
     public Long add(User user) throws ClassNotFoundException, SQLException {
