@@ -16,6 +16,17 @@ public class JdbcContext {
         this.dataSource = dataSource;
     }
 
+    private void update(Object[] params) {
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE userinfo SET NAME = ?, PASSWORD = ? WHERE ID = ?");
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i, params[i]);
+            }
+            return preparedStatement;
+        };
+        this.jdbcContextForStatementStrategyForUpdate(statementStrategy);
+    }
+
     public User jdbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy) throws SQLException {
         Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = null;
