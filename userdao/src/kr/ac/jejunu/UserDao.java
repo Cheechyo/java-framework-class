@@ -20,8 +20,8 @@ public class UserDao {
         ResultSet resultSet = null;
         User user = null;
         try {
-            StatementStrategy statementStrategy = new GetUserStatementStrategy();
-            preparedStatement = statementStrategy.makeStatement(id, connection);
+            StatementStrategy statementStrategy = new GetUserStatementStrategy(id);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();
             if (resultSet.next()){
@@ -62,8 +62,8 @@ public class UserDao {
         long id = 0;
         try {
             connection = connectionMaker.getConnection();
-            StatementStrategy statementStrategy = new AddUserStatementStrategy();
-            preparedStatement = statementStrategy.makeStatement(user, connection);
+            StatementStrategy statementStrategy = new AddUserStatementStrategy(user);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.executeUpdate();
 
             // last_insert_id는 connection 기반. 다른 connection이 add한다 해도 그걸 가져오진 않음.
@@ -97,7 +97,6 @@ public class UserDao {
         return id;
     }
 
-
     public long update(User user) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -105,8 +104,8 @@ public class UserDao {
         long id = 0;
         try {
             connection = connectionMaker.getConnection();
-            StatementStrategy statementStrategy = new UpdateUserStatementStrategy();
-            preparedStatement = statementStrategy.makeStatement(user, connection);
+            StatementStrategy statementStrategy = new UpdateUserStatementStrategy(user);
+            preparedStatement = statementStrategy.makeStatement(connection);
 
             preparedStatement = connection.prepareStatement("SELECT last_insert_id()");
             preparedStatement.execute();
@@ -144,8 +143,8 @@ public class UserDao {
         ResultSet resultSet = null;
         try {
             connection = connectionMaker.getConnection();
-            StatementStrategy statementStrategy = new DeleteUserStatementStrategy();
-            preparedStatement = statementStrategy.makeStatement(id, connection);
+            StatementStrategy statementStrategy = new DeleteUserStatementStrategy(id);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.executeUpdate();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
