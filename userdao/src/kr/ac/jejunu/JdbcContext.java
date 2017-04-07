@@ -16,17 +16,6 @@ public class JdbcContext {
         this.dataSource = dataSource;
     }
 
-    void update(String sql, Object[] params) {
-        StatementStrategy statementStrategy = connection -> {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for (int i = 0; i < params.length; i++) {
-                preparedStatement.setObject(i, params[i]);
-            }
-            return preparedStatement;
-        };
-        this.jdbcContextForStatementStrategyForUpdate(statementStrategy);
-    }
 
     public User jdbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy) throws SQLException {
         Connection connection = dataSource.getConnection();
@@ -132,4 +121,35 @@ public class JdbcContext {
         }
     }
 
+    void update(String sql, Object[] params) {
+        StatementStrategy statementStrategy = connection -> {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+            return preparedStatement;
+        };
+        this.jdbcContextForStatementStrategyForUpdate(statementStrategy);
+    }
+    User queryForObject(String sql, Object[] params) throws SQLException {
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+            return preparedStatement;
+        };
+        return this.jdbcContextWithStatementStrategyForGet(statementStrategy);
+    }
+    Long insert(String sql, Object[] params) {
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+            return preparedStatement;
+        };
+        return this.jdbcContextWithStatementStrategyForAdd(statementStrategy);
+    }
 }

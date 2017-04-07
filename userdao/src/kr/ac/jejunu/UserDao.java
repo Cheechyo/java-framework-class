@@ -1,6 +1,5 @@
 package kr.ac.jejunu;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -8,25 +7,17 @@ import java.sql.SQLException;
  */
 public class UserDao {
     private JdbcContext jdbcContext;
-    private String sql;
 
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        StatementStrategy statementStrategy = connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
-            preparedStatement.setLong(1, id);
-            return preparedStatement;
-        };
-        return jdbcContext.jdbcContextWithStatementStrategyForGet(statementStrategy);
+        final String sql = "select * from userinfo where id = ?";
+        Object[] params = new Object[]{id};
+        return jdbcContext.queryForObject(sql, params);
     }
 
     public Long add(User user) throws ClassNotFoundException, SQLException {
-        StatementStrategy statementStrategy = connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO userinfo(name,password) values (?, ?)");
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            return preparedStatement;
-        };
-        return jdbcContext.jdbcContextWithStatementStrategyForAdd(statementStrategy);
+        final String sql = "INSERT INTO userinfo(name,password) values (?, ?)";
+        Object[] params = new Object[]{user.getName(), user.getPassword()};
+        return jdbcContext.insert(sql, params);
     }
 
     public void update(User user) {
