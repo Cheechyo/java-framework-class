@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -24,7 +25,7 @@ public class UserDaoTest {
     }
 
     @Test
-    public void add() throws SQLException, ClassNotFoundException {
+    public void add() {
         Long id = generateRandomLong();
         String name = "Cheechyo";
         String password = "cheese";
@@ -39,7 +40,7 @@ public class UserDaoTest {
     }
 
     @Test
-    public void get() throws SQLException, ClassNotFoundException {
+    public void get() {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
@@ -48,6 +49,20 @@ public class UserDaoTest {
         assertThat(id, is(user.getId()));
         assertThat(name, is(user.getName()));
         assertThat(password, is(user.getPassword()));
+    }
+
+    @Test
+    public void delete() throws SQLException, ClassNotFoundException {
+        Long id = generateRandomLong();
+        String name = "Hahaha";
+        String password = "heheheh";
+        User user = new User();
+        user.setId(id);
+        user.setName(name);
+        user.setPassword(password);
+        userDao.add(user);
+        userDao.delete(user);
+        assertThat(userDao.get(id), is(nullValue()));
     }
 
     private Long generateRandomLong() {
