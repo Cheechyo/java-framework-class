@@ -3,7 +3,7 @@ package kr.ac.jejunu;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.sql.SQLException;
 import java.util.Random;
@@ -15,12 +15,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDaoTest {
-
     private UserDao userDao;
 
     @Before
     public void setup(){
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        ApplicationContext context = new GenericXmlApplicationContext("spring-context.xml");
         userDao = context.getBean(UserDao.class);
     }
 
