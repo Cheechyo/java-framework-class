@@ -7,8 +7,7 @@ import java.sql.*;
  */
 public class UserDao {
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
+        Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
         preparedStatement.execute();
@@ -24,20 +23,23 @@ public class UserDao {
         return user;
     }
 
-    public Long add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO userinfo(NAME, PASSWORD) values (?, ?)");
-        preparedStatement.setString(1, user.getName());
-        preparedStatement.setString(2, user.getPassword());
+
+    public void add(User user) throws ClassNotFoundException, SQLException {
+        Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO userinfo(ID, NAME, PASSWORD) values (?, ?, ?)");
+        preparedStatement.setLong(1, user.getId());
+        preparedStatement.setString(2, user.getName());
+        preparedStatement.setString(3, user.getPassword());
         preparedStatement.execute();
-        preparedStatement = connection.prepareStatement("select LAST_INSERT_ID() from userinfo");
-        preparedStatement.execute();
-        ResultSet resultSet = preparedStatement.getResultSet();
-        resultSet.next();
-        Long id = resultSet.getLong(1);
         preparedStatement.close();
         connection.close();
-        return id;
     }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connection;
+        connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
+        return connection;
+    }
+
 }
