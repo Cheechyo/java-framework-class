@@ -1,16 +1,30 @@
-package jr.ac.jejunu;
+package kr.ac.jejunu;
 
 import org.junit.Test;
 
 import java.sql.SQLException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDaoTest {
+    @Test
+    public void add() throws SQLException, ClassNotFoundException {
+        String name = "Cheechyo";
+        String password = "cheese";
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+        UserDao userDao = new UserDao();
+        Long id = userDao.add(user);
+        User addedUser = userDao.get(id);
+        assertThat(name, is(addedUser.getName()));
+        assertThat(password, is(addedUser.getPassword()));
+    }
+
     @Test
     public void get() throws SQLException, ClassNotFoundException {
         Long id = 1L;
@@ -18,6 +32,7 @@ public class UserDaoTest {
         String password = "Nu Ri";
         UserDao userDao = new UserDao();
         User user = userDao.get(id);
+
         assertThat(id, is(user.getId()));
         assertThat(name, is(user.getName()));
         assertThat(password, is(user.getPassword()));

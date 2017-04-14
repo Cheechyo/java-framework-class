@@ -1,4 +1,4 @@
-package jr.ac.jejunu;
+package kr.ac.jejunu;
 
 /**
  * Created by Cheechyo on 2017. 3. 15..

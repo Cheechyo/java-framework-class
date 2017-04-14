@@ -1,4 +1,4 @@
-package jr.ac.jejunu;
+package kr.ac.jejunu;
 
 import java.sql.*;
 
@@ -7,28 +7,37 @@ import java.sql.*;
  */
 public class UserDao {
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        // User는 mysql에 있음
-        // Class를 로딩해야되겠네
         Class.forName("com.mysql.jdbc.Driver");
-        // 커넥션을 맺기
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
-        // 쿼리를 만들어야겠네
         PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
-        // 쿼리를 실해야겠네
         preparedStatement.execute();
-        // 실행된 결과를 객체에 매핑
         ResultSet resultSet = preparedStatement.getResultSet();
         resultSet.next();
         User user = new User();
         user.setId(resultSet.getLong("ID"));
         user.setName(resultSet.getString("NAME"));
         user.setPassword(resultSet.getString("PASSWORD"));
-        // 자원 해지
         resultSet.close();
         preparedStatement.close();
         connection.close();
-        // 결과를 리턴
         return user;
+    }
+
+    public Long add(User user) throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO userinfo(NAME, PASSWORD) values (?, ?)");
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getPassword());
+        preparedStatement.execute();
+        preparedStatement = connection.prepareStatement("select LAST_INSERT_ID() from userinfo");
+        preparedStatement.execute();
+        ResultSet resultSet = preparedStatement.getResultSet();
+        resultSet.next();
+        Long id = resultSet.getLong(1);
+        preparedStatement.close();
+        connection.close();
+        return id;
     }
 }
