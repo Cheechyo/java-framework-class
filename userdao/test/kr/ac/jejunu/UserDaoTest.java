@@ -1,5 +1,7 @@
-package jr.ac.jejunu;
+package kr.ac.jejunu;
 
+import kr.ac.jejunu.User;
+import kr.ac.jejunu.UserDao;
 import org.junit.Test;
 
 import java.sql.SQLException;
