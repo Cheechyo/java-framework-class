@@ -66,8 +66,10 @@ public class UserDaoTest {
     }
 
     private Long generateRandomLong() {
-        Long l = new Long(new Random().nextInt());
-        return l * l % 100000;
+        Random r = new Random();
+        r.setSeed(System.currentTimeMillis());
+        int i = r.nextInt(1000000);
+        return new Long(i);
     }
 
 }
