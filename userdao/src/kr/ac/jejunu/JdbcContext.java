@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class JdbcContext {
     private DataSource dataSource;
 
-    public void jdbcContextWithStatementStrategyForDelete(StatementStrategy statementStrategy, User user) throws SQLException {
+    public void jdbcContextWithStatementStrategyForDelete(StatementStrategy statementStrategy) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -37,7 +37,7 @@ public class JdbcContext {
         }
     }
 
-    public User jdbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy, Long id) throws SQLException {
+    public User jdbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy) throws SQLException {
         User user = null;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -85,5 +85,27 @@ public class JdbcContext {
 
     public DataSource getDataSource() {
         return dataSource;
+    }
+
+    public void update(String sql, Object[] params) throws SQLException {
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+            return  preparedStatement;
+        };
+        this.jdbcContextWithStatementStrategyForDelete(statementStrategy);
+    }
+
+    public User query(String sql, Object[] params) throws SQLException {
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+            return preparedStatement;
+        };
+        return this.jdbcContextWithStatementStrategyForGet(statementStrategy);
     }
 }
