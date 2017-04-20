@@ -17,7 +17,7 @@ public class JdbcContext {
         PreparedStatement preparedStatement = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, user);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.execute();
         } finally {
             if (preparedStatement != null) {
@@ -44,7 +44,7 @@ public class JdbcContext {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, id);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();
             if (resultSet.next()) {
