@@ -1,0 +1,18 @@
+package kr.ac.jejunu;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+/**
+ * Created by Cheechyo on 2017. 4. 20..
+ */
+public class GetUserStatementStrategy implements StatementStrategy {
+    @Override
+    public PreparedStatement makeStatement(Connection connection, Object obj) throws SQLException {
+        Long id = (Long) obj;
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
+        preparedStatement.setLong(1, id);
+        return preparedStatement;
+    }
+}
