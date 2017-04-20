@@ -3,7 +3,7 @@ package kr.ac.jejunu;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.sql.SQLException;
 import java.util.Random;
@@ -19,7 +19,7 @@ public class UserDaoTest {
 
     @Before
     public void setup(){
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        ApplicationContext context = new GenericXmlApplicationContext("spring-context.xml");
         userDao = context.getBean(UserDao.class);
     }
 
