@@ -5,10 +5,9 @@ import java.sql.*;
 /**
  * Created by Cheechyo on 2017. 3. 15..
  */
-public class UserDao {
+public abstract class UserDao {
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
+        Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
         preparedStatement.execute();
@@ -25,8 +24,7 @@ public class UserDao {
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
+        Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO userinfo VALUES (?, ?, ?)");
         preparedStatement.setLong(1, user.getId());
         preparedStatement.setString(2, user.getName());
@@ -35,4 +33,6 @@ public class UserDao {
         preparedStatement.close();
         connection.close();
     }
+
+    abstract public Connection getConnection() throws ClassNotFoundException, SQLException;
 }
