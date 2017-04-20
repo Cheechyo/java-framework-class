@@ -17,7 +17,7 @@ public class UserDaoTest {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new DUserDao();
+        UserDao userDao = new UserDao(new DConnectionMaker());
         User user = userDao.get(id);
 
         assertThat(id, is(user.getId()));
@@ -34,7 +34,7 @@ public class UserDaoTest {
         user.setId(id);
         user.setName(name);
         user.setPassword(password);
-        UserDao userDao = new DUserDao();
+        UserDao userDao = new UserDao(new DConnectionMaker());
         userDao.add(user);
         user = userDao.get(id);
 
@@ -48,7 +48,7 @@ public class UserDaoTest {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new NUserDao();
+        UserDao userDao = new UserDao(new NConnectiomMaker());
         User user = userDao.get(id);
 
         assertThat(id, is(user.getId()));
@@ -65,7 +65,7 @@ public class UserDaoTest {
         user.setId(id);
         user.setName(name);
         user.setPassword(password);
-        UserDao userDao = new NUserDao();
+        UserDao userDao = new UserDao(new NConnectiomMaker());
         userDao.add(user);
         user = userDao.get(id);
 
