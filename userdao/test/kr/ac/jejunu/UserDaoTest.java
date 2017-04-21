@@ -17,7 +17,7 @@ public class UserDaoTest {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new UserDao();
+        UserDao userDao = new JejuUserDao();
         User user = userDao.get(id);
         assertThat(id, is(user.getId()));
         assertThat(name, is(user.getName()));
@@ -29,7 +29,36 @@ public class UserDaoTest {
         Long id = randomGenerateId();
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new UserDao();
+        UserDao userDao = new JejuUserDao();
+        User user = new User();
+        user.setId(id);
+        user.setName(name);
+        user.setPassword(password);
+        userDao.add(user);
+        user = userDao.get(id);
+        assertThat(id, is(user.getId()));
+        assertThat(name, is(user.getName()));
+        assertThat(password, is(user.getPassword()));
+    }
+
+    @Test
+    public void hallaGet() throws SQLException, ClassNotFoundException {
+        Long id = 1L;
+        String name = "Won Ji";
+        String password = "Nu Ri";
+        UserDao userDao = new HallaUserDao();
+        User user = userDao.get(id);
+        assertThat(id, is(user.getId()));
+        assertThat(name, is(user.getName()));
+        assertThat(password, is(user.getPassword()));
+    }
+
+    @Test
+    public void hallaAdd() throws SQLException, ClassNotFoundException {
+        Long id = randomGenerateId();
+        String name = "Won Ji";
+        String password = "Nu Ri";
+        UserDao userDao = new HallaUserDao();
         User user = new User();
         user.setId(id);
         user.setName(name);
