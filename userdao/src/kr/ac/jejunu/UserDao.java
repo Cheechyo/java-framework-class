@@ -23,18 +23,19 @@ public class UserDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        User user;
+        User user = null;
         try {
             connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
             preparedStatement.setLong(1, id);
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();
-            resultSet.next();
-            user = new User();
-            user.setId(resultSet.getLong("ID"));
-            user.setName(resultSet.getString("NAME"));
-            user.setPassword(resultSet.getString("PASSWORD"));
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getLong("ID"));
+                user.setName(resultSet.getString("NAME"));
+                user.setPassword(resultSet.getString("PASSWORD"));
+            }
         } finally {
             if (resultSet != null) {
                 try {
@@ -70,6 +71,32 @@ public class UserDao {
             preparedStatement.setLong(1, user.getId());
             preparedStatement.setString(2, user.getName());
             preparedStatement.setString(3, user.getPassword());
+            preparedStatement.execute();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void delete(User user) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement("DELETE FROM userinfo WHERE id = ?");
+            preparedStatement.setLong(1, user.getId());
             preparedStatement.execute();
         } finally {
             if (preparedStatement != null) {
