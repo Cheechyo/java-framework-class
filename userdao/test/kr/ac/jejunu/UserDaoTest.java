@@ -1,5 +1,6 @@
 package kr.ac.jejunu;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -12,12 +13,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDaoTest {
+
+    private DaoFactory daoFactory;
+
+    @Before
+    public void setup(){
+        daoFactory = new DaoFactory();
+    }
+
     @Test
     public void get() throws SQLException, ClassNotFoundException {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new UserDao(new JejuConnectionMaker());
+        UserDao userDao = daoFactory.getUserDao();
         User user = userDao.get(id);
         assertThat(id, is(user.getId()));
         assertThat(name, is(user.getName()));
@@ -29,36 +38,7 @@ public class UserDaoTest {
         Long id = gernarateRandomId();
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = new UserDao(new JejuConnectionMaker());
-        User user = new User();
-        user.setId(id);
-        user.setName(name);
-        user.setPassword(password);
-        userDao.add(user);
-        user = userDao.get(id);
-        assertThat(id, is(user.getId()));
-        assertThat(name, is(user.getName()));
-        assertThat(password, is(user.getPassword()));
-    }
-
-    @Test
-    public void hallaGet() throws SQLException, ClassNotFoundException {
-        Long id = 1L;
-        String name = "Won Ji";
-        String password = "Nu Ri";
-        UserDao userDao = new UserDao(new HallaConnectionMaker());
-        User user = userDao.get(id);
-        assertThat(id, is(user.getId()));
-        assertThat(name, is(user.getName()));
-        assertThat(password, is(user.getPassword()));
-    }
-
-    @Test
-    public void hallaAdd() throws SQLException, ClassNotFoundException {
-        Long id = gernarateRandomId();
-        String name = "Won Ji";
-        String password = "Nu Ri";
-        UserDao userDao = new UserDao(new HallaConnectionMaker());
+        UserDao userDao = daoFactory.getUserDao();
         User user = new User();
         user.setId(id);
         user.setName(name);
