@@ -20,12 +20,12 @@ public class JdbcContext {
         this.dataSource = dataSource;
     }
 
-    public void update(StatementStrategy statementStrategy, User user) throws SQLException {
+    public void update(StatementStrategy statementStrategy) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, user);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.execute();
         } finally {
             if (preparedStatement != null) {
@@ -45,14 +45,14 @@ public class JdbcContext {
         }
     }
 
-    public User query(StatementStrategy statementStrategy, Long id) throws SQLException {
+    public User query(StatementStrategy statementStrategy) throws SQLException {
         User user = null;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, id);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();
             if (resultSet.next()) {
