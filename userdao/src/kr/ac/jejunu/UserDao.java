@@ -5,9 +5,15 @@ import java.sql.*;
 /**
  * Created by Cheechyo on 2017. 3. 15..
  */
-public abstract class UserDao {
+public class UserDao {
+    ConnectionMaker connectionMaker;
+
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
+
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
         preparedStatement.execute();
@@ -23,10 +29,8 @@ public abstract class UserDao {
         return user;
     }
 
-    abstract Connection getConnection() throws ClassNotFoundException, SQLException;
-
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO userinfo values(?, ?, ?)");
         preparedStatement.setLong(1, user.getId());
         preparedStatement.setString(2, user.getName());
