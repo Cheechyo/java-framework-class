@@ -20,12 +20,12 @@ public class JdbcContext {
 
     private DataSource dataSource;
 
-    public void jdbcContextWithStatementStrategyForAdd(StatementStrategy statementStrategy, User user) throws SQLException {
+    public void jdbcContextWithStatementStrategyForAdd(StatementStrategy statementStrategy) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, user);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.execute();
         } finally {
             if (preparedStatement != null) {
@@ -45,14 +45,14 @@ public class JdbcContext {
         }
     }
 
-    public User jdbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy, Long id) throws SQLException {
+    public User jdbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy) throws SQLException {
         User user = null;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, id);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.execute();
             resultSet = preparedStatement.getResultSet();
             if (resultSet.next()) {
