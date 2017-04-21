@@ -85,4 +85,24 @@ public class JdbcContext {
             }
         }
     }
+
+    public void update(Object[] params, String sql) throws SQLException {
+        StatementStrategy statementStrategy = getStatementStrategy(params, sql);
+        this.jdbcContextWithStatementStrategyForAdd(statementStrategy);
+    }
+
+    private StatementStrategy getStatementStrategy(Object[] params, String sql) {
+        return connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+            }
+            return preparedStatement;
+        };
+    }
+
+    public User query(Object[] params, String sql) throws SQLException {
+        StatementStrategy statementStrategy = getStatementStrategy(params, sql);
+        return jdbcContextWithStatementStrategyForGet(statementStrategy);
+    }
 }
