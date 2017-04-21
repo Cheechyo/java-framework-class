@@ -6,7 +6,12 @@ import java.sql.*;
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDao {
-    public UserDao(ConnectionMaker connectionMaker) {
+
+    public ConnectionMaker getConnectionMaker() {
+        return connectionMaker;
+    }
+
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
     }
 
