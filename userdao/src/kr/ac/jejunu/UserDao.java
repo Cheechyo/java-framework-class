@@ -1,10 +1,7 @@
 package kr.ac.jejunu;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -24,18 +21,15 @@ public class UserDao {
     public User get(Long id) throws SQLException, ClassNotFoundException {
         Object[] params = {id};
         String sql = "select * from userinfo where id = ?";
-        return jdbcTemplate.query(sql, params, new ResultSetExtractor<User>() {
-            @Override
-            public User extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                User user = null;
-                if (resultSet.next()) {
-                    user = new User();
-                    user.setId(resultSet.getLong("ID"));
-                    user.setName(resultSet.getString("NAME"));
-                    user.setPassword(resultSet.getString("PASSWORD"));
-                }
-                return user;
+        return jdbcTemplate.query(sql, params, resultSet -> {
+            User user = null;
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getLong("ID"));
+                user.setName(resultSet.getString("NAME"));
+                user.setPassword(resultSet.getString("PASSWORD"));
             }
+            return user;
         });
     }
 
