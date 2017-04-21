@@ -1,5 +1,7 @@
 package kr.ac.jejunu;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -17,18 +19,41 @@ public class UserDao {
     JdbcContext jdbcContext;
 
     public User get(Long id) throws SQLException, ClassNotFoundException {
-        StatementStrategy statementStrategy = new StatementStrategyForGet();
-        User user = jdbcContext.jdbcContextWithStatementStrategyForGet(id, statementStrategy);
+        StatementStrategy statementStrategy = new StatementStrategy() {
+            @Override
+            public PreparedStatement makeStatement(Connection connection) throws SQLException {
+                PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
+                preparedStatement.setLong(1, id);
+                return  preparedStatement;
+            }
+        };
+        User user = jdbcContext.jdbcContextWithStatementStrategyForGet(statementStrategy);
         return user;
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        StatementStrategy statementStrategy = new StatementStrategyForAdd();
-        jdbcContext.jdbcContextWithStatementStrategyForAdd(user, statementStrategy);
+        StatementStrategy statementStrategy = new StatementStrategy() {
+            @Override
+            public PreparedStatement makeStatement(Connection connection) throws SQLException {
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO userinfo VALUES(?,?,?)");
+                preparedStatement.setLong(1, user.getId());
+                preparedStatement.setString(2, user.getName());
+                preparedStatement.setString(3, user.getPassword());
+                return  preparedStatement;
+            }
+        };
+        jdbcContext.jdbcContextWithStatementStrategyForAdd(statementStrategy);
     }
 
     public void delete(User user) throws SQLException {
-        StatementStrategy statementStrategy = new StatementStrategyForDelete();
-        jdbcContext.jdbcContextWithStatementStrategyForAdd(user, statementStrategy);
+        StatementStrategy statementStrategy = new StatementStrategy() {
+            @Override
+            public PreparedStatement makeStatement(Connection connection) throws SQLException {
+                PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM userinfo WHERE id = ?");
+                preparedStatement.setLong(1, user.getId());
+                return  preparedStatement;
+            }
+        };
+        jdbcContext.jdbcContextWithStatementStrategyForAdd(statementStrategy);
     }
 }
