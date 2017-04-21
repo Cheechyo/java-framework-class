@@ -1,116 +1,33 @@
 package kr.ac.jejunu;
 
-import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.SQLException;
 
 /**
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDao {
-    public DataSource getDataSource() {
-        return dataSource;
+    public JdbcContext getJdbcContext() {
+        return jdbcContext;
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public void setJdbcContext(JdbcContext jdbcContext) {
+        this.jdbcContext = jdbcContext;
     }
 
-    DataSource dataSource;
-
-
-
+    JdbcContext jdbcContext;
     public User get(Long id) throws SQLException, ClassNotFoundException {
         StatementStrategy statementStrategy = new StatementStrategyForGet();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        User user = null;
-        try {
-            connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, id);
-            preparedStatement.execute();
-            resultSet = preparedStatement.getResultSet();
-            if (resultSet.next()) {
-                user = new User();
-                user.setId(resultSet.getLong("ID"));
-                user.setName(resultSet.getString("NAME"));
-                user.setPassword(resultSet.getString("PASSWORD"));
-            }
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        User user = jdbcContext.jdbcContextWithStatementStrategyForGet(statementStrategy, id);
         return user;
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
         StatementStrategy statementStrategy = new StatementStrategyForAdd();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, user);
-            preparedStatement.execute();
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        jdbcContext.jdbcContextWithStatementStrategyForAdd(statementStrategy, user);
     }
 
     public void delete(User user) throws SQLException {
         StatementStrategy statementStrategy = new StatementStrategyForDelete();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            preparedStatement = statementStrategy.makeStatement(connection, user);
-            preparedStatement.execute();
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+       jdbcContext.jdbcContextWithStatementStrategyForAdd(statementStrategy, user);
     }
 }
