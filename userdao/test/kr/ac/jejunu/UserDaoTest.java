@@ -2,6 +2,8 @@ package kr.ac.jejunu;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.SQLException;
 import java.util.Random;
@@ -14,11 +16,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class UserDaoTest {
 
-    private DaoFactory daoFactory;
+    private UserDao userDao;
 
     @Before
     public void setup(){
-        daoFactory = new DaoFactory();
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        userDao = context.getBean(UserDao.class);
     }
 
     @Test
@@ -26,7 +29,6 @@ public class UserDaoTest {
         Long id = 1L;
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = daoFactory.getUserDao();
         User user = userDao.get(id);
         assertThat(id, is(user.getId()));
         assertThat(name, is(user.getName()));
@@ -38,7 +40,6 @@ public class UserDaoTest {
         Long id = gernarateRandomId();
         String name = "Won Ji";
         String password = "Nu Ri";
-        UserDao userDao = daoFactory.getUserDao();
         User user = new User();
         user.setId(id);
         user.setName(name);
