@@ -1,18 +1,17 @@
 package kr.ac.jejunu;
 
-import kr.ac.jejunu.User;
-import kr.ac.jejunu.UserDao;
 import org.junit.Test;
 
 import java.sql.SQLException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by Cheechyo on 2017. 3. 15..
  */
 public class UserDaoTest {
+
     @Test
     public void get() throws SQLException, ClassNotFoundException {
         Long id = 1L;

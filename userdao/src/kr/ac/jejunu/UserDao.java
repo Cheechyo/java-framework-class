@@ -9,9 +9,9 @@ public class UserDao {
     public User get(Long id) throws SQLException, ClassNotFoundException {
         // User는 mysql에 있음
         // Class를 로딩해야되겠네
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("org.sqlite.JDBC");
         // 커넥션을 맺기
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "root");
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:user.sqlite");
         // 쿼리를 만들어야겠네
         PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
